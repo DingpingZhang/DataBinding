@@ -1,6 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Xunit;
+using Xunit.Sdk;
 
 namespace DataBinding.Tests
 {
@@ -83,7 +85,7 @@ namespace DataBinding.Tests
         }
 
         [Fact]
-        public void MultiNestedConditionalExpressionActivateAndInactivate()
+        public void TwoLevelNestingConditionalExpressionActivateAndInactivate()
         {
             var a = InitializeComplexTypeInstance();
             var complexTypeTestCases = new[]
@@ -179,6 +181,74 @@ namespace DataBinding.Tests
             }
 
             Assert.Equal(0, count);
+        }
+
+        [Fact]
+        public void ThreeLevelNestingConditionalExpressionInactivate()
+        {
+            var a = InitializeComplexTypeInstance();
+            var b = InitializeComplexTypeInstance();
+            var c = InitializeComplexTypeInstance();
+            var d = InitializeComplexTypeInstance();
+
+            var result = int.MinValue;
+            var count = 0;
+
+            ExpressionObserver.Observes(() =>
+                a.BoolProp
+                    ? a.IntProp
+                    : b.BoolProp
+                        ? b.IntProp
+                        : c.BoolProp
+                            ? c.IntProp
+                            : d.IntProp,
+                (value, exception) =>
+                {
+                    Assert.Null(exception);
+                    result = value;
+                    count++;
+                });
+
+            // 1. False-False-False -> d.IntProp
+            Check(d, i =>
+            {
+                a.IntProp = b.IntProp = c.IntProp = i + 10086;
+            });
+
+            // 2. False-True-False -> b.IntProp
+            b.BoolProp = true;
+            Check(b, i =>
+            {
+                a.IntProp = c.IntProp = d.IntProp = i + 10086;
+                c.BoolProp = !c.BoolProp;
+            });
+
+            // 3. True-False-False -> a.IntProp
+            b.BoolProp = false;
+            a.BoolProp = true;
+            Check(a, i =>
+            {
+                b.IntProp = c.IntProp = d.IntProp = i + 10086;
+                b.BoolProp = !b.BoolProp;
+                c.BoolProp = !c.BoolProp;
+            });
+
+            void Check(ComplexType testObject, Action<int> uselessChange)
+            {
+                result = int.MinValue;
+                count = 0;
+
+                testObject.IntProp = 666;
+                Assert.Equal(testObject.IntProp, result);
+                Assert.Equal(1, count);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    uselessChange(i);
+                }
+                Assert.Equal(testObject.IntProp, result);
+                Assert.Equal(1, count);
+            }
         }
 
         private static ComplexType InitializeComplexTypeInstance()

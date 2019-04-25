@@ -121,9 +121,12 @@ namespace DataBinding
             }
             else
             {
+                // Disable all nodes and child-conditional-expression recursively.
                 _allNodes.Keys.ForEach(item => item.IsActivated = false);
-                if (IfTrueChild != null) IfTrueChild.IsActivated = false;
-                if (IfFalseChild != null) IfFalseChild.IsActivated = false;
+                // The following two line only used to conditional expressions
+                // that are larger than three levels of nesting.
+                IfTrueChild?.Update(false);
+                IfFalseChild?.Update(false);
             }
         }
 
