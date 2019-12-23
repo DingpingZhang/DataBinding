@@ -2,7 +2,7 @@
 
 namespace DataBinding
 {
-    public class DependencyGraph
+    internal class DependencyGraph
     {
         public IReadOnlyCollection<DependencyNode> DependencyRootNodes { get; }
 

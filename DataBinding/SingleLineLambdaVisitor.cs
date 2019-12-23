@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace DataBinding
 {
-    public class SingleLineLambdaVisitor : ExpressionVisitor
+    internal class SingleLineLambdaVisitor : ExpressionVisitor
     {
         private const string ClosureClassName = "DisplayClass"; // Regex: <>__DisplayClass_\d+?_\d+?
         private static readonly Type InpcType = typeof(INotifyPropertyChanged);
