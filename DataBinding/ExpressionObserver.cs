@@ -14,6 +14,13 @@ namespace DataBinding
             return new DependencyGraph(visitor.RootNodes, visitor.ConditionalNodes);
         }
 
+        /// <summary>
+        /// Observes an expression and call the <see cref="onValueChanged"/> callback method when it might change.
+        /// </summary>
+        /// <typeparam name="T">The type represents the return type of an expression.</typeparam>
+        /// <param name="expression">The single-line lambda expression is used to be observed.</param>
+        /// <param name="onValueChanged">The callback method.</param>
+        /// <returns>Returns a token to unbind.</returns>
         public static IDisposable Observes<T>(Expression<Func<T>> expression, Action<T, Exception> onValueChanged)
         {
             var valueGetter = expression.Compile();
