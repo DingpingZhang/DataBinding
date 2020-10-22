@@ -33,6 +33,7 @@ Any expression will be parsed into a dependency graph and a conditional expressi
 
 - Dependency Graph: Each dependency node corresponds to an property (or closure field) in the expression you provoded. When an `INPC` property changed, its corresponding dependency node will unsubscribe from the old `INPC` object and subscribe to the new `INPC` object, and notify its downstream nodes to unsubscribe and subscribe.
 - Conditional Expression Tree: Control the activation state of dependency nodes, and an inactivated dependency node will not observe the `PropertyChanged` event. Maybe it can improve performance.
+- See  [考不上三本也会实现数据绑定（三）](https://zhuanlan.zhihu.com/p/63909344) for details.
 
 ## Some dependency graph examples
 
