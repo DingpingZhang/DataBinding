@@ -1,3 +1,9 @@
+The library was used as an experimental demo and is no longer maintained.
+
+The functionality has been migrated to [WpfExtensions.Binding](https://github.com/DingpingZhang/WpfExtensions), or get it from [![version](https://img.shields.io/nuget/v/WpfExtensions.Binding.svg)](https://www.nuget.org/packages/WpfExtensions.Binding).
+
+---
+
 # DataBinding
 
 ## What is it
